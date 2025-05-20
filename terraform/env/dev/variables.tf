@@ -56,3 +56,58 @@ variable "ecr" {
 
   })
 }
+
+
+variable "db" {
+  description = "RDS PostgreSQL config for dev"
+  type = object({
+    identifier                             = string
+    engine_version                         = string
+    instance_class                         = string
+    allocated_storage                      = number
+    db_name                                = string
+    username                               = string
+    port                                   = number
+    iam_database_authentication_enabled    = bool
+    vpc_security_group_ids                 = list(string)
+    maintenance_window                     = string
+    backup_window                          = string
+    monitoring_interval                    = number
+    monitoring_role_name                   = string
+    create_monitoring_role                 = bool
+    tags                                   = map(string)
+    create_db_subnet_group                 = bool
+    subnet_ids                             = list(string)
+    family                                 = string
+    major_engine_version                   = string
+    deletion_protection                    = bool
+    parameters                             = list(map(string))
+  })
+}
+
+
+variable "sg" {
+  description = "Security group configuration object"
+  type = object({
+    name                      = string
+    description               = string
+    vpc_id                    = string
+    ingress_with_cidr_blocks = list(map(string))
+    tags                      = optional(map(string), {})
+  })
+}
+
+
+variable "iam" {
+  description = "IAM role configuration"
+  type = object({
+    namespace          = string
+    stage              = string
+    name               = string
+    principals         = map(list(string))
+    policy_description = optional(string)
+    role_description   = optional(string)
+    policy_documents   = list(string)
+    tags               = optional(map(string), {})
+  })
+}

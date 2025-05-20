@@ -39,7 +39,6 @@ eks = {
     node_pools = ["general-purpose"]
   }
 
-  # Temporary placeholders — these will be overridden by outputs from VPC module
   vpc_id     = ""
   subnet_ids = []
 
@@ -72,3 +71,92 @@ ecr = {
 
 }
 
+
+db = {
+  identifier      = "demodb"
+  engine_version  = "15.5"
+  instance_class  = "db.t3.medium"
+  allocated_storage = 20
+
+  db_name  = "demodb"
+  username = "postgres"
+  port     = 5432
+
+  iam_database_authentication_enabled = true
+
+  vpc_security_group_ids = []
+  subnet_ids             = []
+  create_db_subnet_group = true
+
+  maintenance_window = "Mon:00:00-Mon:03:00"
+  backup_window      = "03:00-06:00"
+
+  monitoring_interval    = 30
+  monitoring_role_name   = "MyRDSMonitoringRole"
+  create_monitoring_role = true
+
+  family               = "postgres15"
+  major_engine_version = "15"
+  deletion_protection  = true
+
+  parameters = [
+    {
+      name  = "log_min_duration_statement"
+      value = "1000"
+    },
+    {
+      name  = "log_statement"
+      value = "mod"
+    }
+  ]
+
+  tags = {
+    Owner       = "devops"
+    Environment = "dev"
+  }
+}
+
+
+
+sg = {
+  name        = "user-service"
+  description = "Security group for user-service with custom ports open within VPC, and PostgreSQL publicly open"
+  vpc_id      = ""
+
+
+
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      description = "User-service ports"
+      cidr_blocks = ""
+    },
+
+  ]
+
+}
+
+
+
+
+iam = {
+  namespace          = "example"
+  stage              = "dev"
+  name               = "ecr-rw-role"
+
+  principals = {
+    AWS = ["arn:aws:iam::123456789012:user/ci"]
+  }
+
+  policy_description = "Allows read/write access to specific ECR repo"
+  role_description   = "Role used by CI pipeline for ECR push/pull"
+
+  policy_documents = [] 
+
+  tags = {
+    Project     = "bigdata-pipeline"
+    Environment = "dev"
+  }
+}
