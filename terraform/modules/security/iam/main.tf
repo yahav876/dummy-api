@@ -12,3 +12,9 @@ module "ecr_rw_role" {
   role_description   = var.iam.role_description
   tags               = var.iam.tags
 }
+
+module "ecr_rw_policy" {
+  source           = "./policies"
+  region           = var.ecr_policy_config.region
+  repository_name  = var.ecr_policy_config.repository_name
+}

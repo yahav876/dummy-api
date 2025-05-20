@@ -69,13 +69,20 @@ module "security_group" {
   )
 }
 
+
+module "ecr_rw_policy" {
+  source          = "../../modules/security/iam/policies"
+  region          = var.ecr_policy_config.region
+  repository_name = var.ecr_policy_config.repository_name
+}
+
 module "ecr_rw_role" {
   source = "../../modules/security/iam"
 
       iam = merge(
     var.iam,
     {
-      policy_documents = [data.aws_iam_policy_document.ecr_read_write.json]
+      policy_documents = [module.ecr_rw_policy.json]  #[data.aws_iam_policy_document.ecr_read_write.json]
 
     }
   )

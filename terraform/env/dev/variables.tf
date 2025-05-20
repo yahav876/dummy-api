@@ -111,3 +111,13 @@ variable "iam" {
     tags               = optional(map(string), {})
   })
 }
+
+
+
+variable "ecr_policy_config" {
+  description = "Configuration for policy module"
+  type = object({
+    region           = string
+    repository_name  = string
+  })
+}
