@@ -2597,9 +2597,10 @@ dags:
     subPath: ~
   gitSync:
     enabled: true
-    repo: "https://github.com/yahav876/dummy-api.git"
+    repo: "git@github.com:yahav876/dummy-api.git"
     branch: "main"
     subPath: "dags"
+    sshKeySecret: airflow-git-ssh-secret
     # credentialsSecret: "your-git-secret"  # optional if private
 
     # git repo clone url

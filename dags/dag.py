@@ -1,58 +1,30 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 import requests
-import psycopg2
 import json
-import os
+from datetime import datetime
 
-# DAG defaults
+def ingest_data():
+    # Call dummy data API
+    resp = requests.get("http://mockingbird.airflow.svc.cluster.local:1512/api/random")
+    resp.raise_for_status()
+    data = resp.json()
+
+    # Insert into Postgres
+    pg_hook = PostgresHook(postgres_conn_id='postgres_default')  # This points to the URI in your secret
+    insert_sql = """
+        INSERT INTO dummy_table (name, email, phone)
+        VALUES (%s, %s, %s)
+    """
+    pg_hook.run(insert_sql, parameters=(data['name'], data['email'], data['phone']))
+
 default_args = {
-    'owner': 'airflow',
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'start_date': datetime(2023, 1, 1)
 }
 
-# Define DAG
-with DAG(
-    dag_id='mockingbird_data_ingestion',
-    default_args=default_args,
-    start_date=datetime(2023, 1, 1),
-    schedule_interval='@hourly',
-    catchup=False,
-    description='Ingest dummy data from Mockingbird and store in RDS',
-) as dag:
-
-    def fetch_and_insert_data():
-        # Call the mockingbird API (adjust the service name if needed)
-        res = requests.get('http://mockingbird:1512/api/data')  # Or use your NodePort/NLB
-        res.raise_for_status()
-        data = res.json()
-
-        # Optional: Transform the data
-        transformed = json.dumps(data)  # For demo purposes, just serialize
-
-        # Connect to PostgreSQL RDS
-        conn = psycopg2.connect(
-            dbname=os.getenv("POSTGRES_DB", "demodb"),
-            user=os.getenv("POSTGRES_USER", "postgres"),
-            password=os.getenv("POSTGRES_PASSWORD", "yourpassword"),
-            host=os.getenv("POSTGRES_HOST", "your-rds-endpoint"),
-            port=5432
-        )
-        cur = conn.cursor()
-
-        # Make sure the table exists
-        cur.execute("CREATE TABLE IF NOT EXISTS dummy_data (id SERIAL PRIMARY KEY, payload JSONB, inserted_at TIMESTAMP DEFAULT NOW());")
-
-        # Insert data
-        cur.execute("INSERT INTO dummy_data (payload) VALUES (%s);", (transformed,))
-        conn.commit()
-
-        cur.close()
-        conn.close()
-
-    ingest_task = PythonOperator(
-        task_id='fetch_transform_store',
-        python_callable=fetch_and_insert_data,
+with DAG('dummy_data_pipeline', schedule_interval='@hourly', default_args=default_args, catchup=False) as dag:
+    ingest = PythonOperator(
+        task_id='ingest_dummy_data',
+        python_callable=ingest_data
     )
