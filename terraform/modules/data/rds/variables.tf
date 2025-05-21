@@ -1,26 +1,83 @@
-variable "db" {
-  description = "PostgreSQL RDS configuration"
-  type = object({
-    identifier                             = string
-    engine_version                         = string
-    instance_class                         = string
-    allocated_storage                      = number
-    db_name                                = string
-    username                               = string
-    port                                   = number
-    iam_database_authentication_enabled    = bool
-    vpc_security_group_ids                 = list(string)
-    maintenance_window                     = string
-    backup_window                          = string
-    monitoring_interval                    = number
-    monitoring_role_name                   = string
-    create_monitoring_role                 = bool
-    tags                                   = map(string)
-    create_db_subnet_group                 = bool
-    subnet_ids                             = list(string)
-    family                                 = string
-    major_engine_version                   = string
-    deletion_protection                    = bool
-    parameters                             = list(map(string))
-  })
+variable "identifier" {
+  type = string
+}
+
+variable "engine_version" {
+  type = string
+}
+
+variable "instance_class" {
+  type = string
+}
+
+variable "allocated_storage" {
+  type = number
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "username" {
+  type = string
+}
+
+variable "port" {
+  type = number
+}
+
+variable "iam_database_authentication_enabled" {
+  type = bool
+}
+
+variable "vpc_security_group_ids" {
+  type = list(string)
+}
+
+variable "maintenance_window" {
+  type = string
+}
+
+variable "backup_window" {
+  type = string
+}
+
+variable "monitoring_interval" {
+  type = number
+}
+
+variable "monitoring_role_name" {
+  type = string
+}
+
+variable "create_monitoring_role" {
+  type = bool
+}
+
+variable "tags" {
+  type = map(string)
+}
+
+variable "create_db_subnet_group" {
+  type = bool
+}
+
+variable "subnet_ids" {
+  type = list(string)
+}
+
+variable "family" {
+  type = string
+}
+
+variable "major_engine_version" {
+  type = string
+}
+
+variable "deletion_protection" {
+  type = bool
+}
+
+variable "parameters" {
+  type = list(map(string))
 }

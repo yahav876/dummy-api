@@ -1,17 +1,22 @@
 general_config = {
   region = "us-east-1"
+  default_tags = {
+    ManagedBy   = "Terraform"
+    Environment = "prod"
+    Project     = "bigdata-pipeline"
+  }
 }
 
 vpc = {
 
-  vpc_name = "example"
-  vpc_cidr = "172.25.0.0/16"
-  region   = "us-west-2"
-  vpc_azs  = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  vpc_name = "dummpy-api"
+  vpc_cidr = "172.30.0.0/16"
+  region   = "us-east-1"
+  vpc_azs  = ["us-east-1a", "us-east-1b", "us-east-1c"]
 
 
-  private_subnet_cidr = ["172.25.0.0/20", "172.25.16.0/20", "172.25.32.0/20"]
-  public_subnet_cidr  = ["172.25.48.0/20", "172.25.64.0/20", "172.25.80.0/20"]
+  private_subnet_cidr = ["172.30.0.0/24", "172.30.16.0/24", "172.30.32.0/24"]
+  public_subnet_cidr  = ["172.30.48.0/24", "172.30.64.0/24", "172.30.80.0/24"]
 
   enable_nat_gateway     = true
   one_nat_gateway_per_az = true
@@ -44,13 +49,17 @@ eks = {
 
 }
 
+eks_addon_versions = {
+  coredns            = "v1.11.3-eksbuild.1"
+  kube_proxy         = "v1.31.2-eksbuild.3"
+  vpc_cni            = "v1.19.0-eksbuild.1"
+  aws_ebs_csi_driver = "v1.43.0-eksbuild.1"
+}
+
 
 ecr = {
   repository_name = "private-example"
 
-  repository_read_write_access_arns = [
-    "arn:aws:iam::012345678901:role/terraform"
-  ]
   repository_lifecycle_policy = {
     rules = [
       {
@@ -74,7 +83,7 @@ ecr = {
 
 db = {
   identifier      = "demodb"
-  engine_version  = "15.5"
+  engine_version  = "17.5"
   instance_class  = "db.t3.medium"
   allocated_storage = 20
 
@@ -95,8 +104,8 @@ db = {
   monitoring_role_name   = "MyRDSMonitoringRole"
   create_monitoring_role = true
 
-  family               = "postgres15"
-  major_engine_version = "15"
+  family               = "postgres17"
+  major_engine_version = "17"
   deletion_protection  = true
 
   parameters = [
@@ -140,18 +149,18 @@ sg = {
 
 
 
-
 iam = {
   namespace          = "example"
   stage              = "dev"
   name               = "ecr-rw-role"
 
   principals = {
-    AWS = ["arn:aws:iam::123456789012:user/ci"]
+    Service = ["ec2.amazonaws.com"]
+    # AWS = ["arn:aws:iam::123456789012:user/ci"]
   }
 
   policy_description = "Allows read/write access to specific ECR repo"
-  role_description   = "Role used by CI pipeline for ECR push/pull"
+  role_description   = "Role used by EC2 for ECR push/pull"
 
   policy_documents = [] 
 
@@ -159,4 +168,10 @@ iam = {
     Project     = "bigdata-pipeline"
     Environment = "dev"
   }
+}
+
+
+ecr_policy_config = {
+  region          = "us-east-1"
+  repository_name = "my-ecr-repo"
 }

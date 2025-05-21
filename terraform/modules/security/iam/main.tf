@@ -3,18 +3,13 @@ module "ecr_rw_role" {
   version = "0.21.0"
 
   enabled            = true
-  namespace          = var.iam.namespace
-  stage              = var.iam.stage
-  name               = var.iam.name
-  principals         = var.iam.principals
-  policy_documents   = var.iam.policy_documents
-  policy_description = var.iam.policy_description
-  role_description   = var.iam.role_description
-  tags               = var.iam.tags
+  namespace          = var.namespace
+  stage              = var.stage
+  name               = var.name
+  principals         = var.principals
+  policy_documents   = var.policy_documents
+  policy_description = var.policy_description
+  role_description   = var.role_description
+  tags               = var.tags
 }
 
-module "ecr_rw_policy" {
-  source           = "./policies"
-  region           = var.ecr_policy_config.region
-  repository_name  = var.ecr_policy_config.repository_name
-}

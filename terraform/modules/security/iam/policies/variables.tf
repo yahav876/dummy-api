@@ -1,8 +1,7 @@
-
 variable "policy_config" {
-  description = "Configuration for policy module"
+  description = "Configuration for ECR policy"
   type = object({
-    region           = optional(string)
-    repository_name  = optional(string)
+    region          = string
+    repository_name = string
   })
 }

@@ -1,53 +1,40 @@
-variable "vpc" {
-  description = "VPC configuration block"
-  type = object({
-    vpc_name        = string
-    vpc_cidr        = string
-    region          = string
-    vpc_azs         = list(string)
-
-    private_subnet_cidr  = list(string)
-    public_subnet_cidr = list(string)
-
-    enable_nat_gateway     = bool
-
-    one_nat_gateway_per_az = bool
-    private_subnet_tags = map(string)
-    public_subnet_tags  = map(string)
-
-  })
+variable "vpc_name" {
+  type = string
 }
-
-
-# variable "private_subnet_tags" {
-#   type        = map(string)
-#   description = "Additional tags for private subnets"
-#   default     = {}
-# }
-
-# variable "public_subnet_tags" {
-#   type        = map(string)
-#   description = "Additional tags for public subnets"
-#   default     = {}
-# }
-
-variable "private_subnet_cidr" {
-  type    = list(any)
-  default = [""]
-
+variable "vpc_cidr" {
+  type = string
 }
-
-variable "public_subnet_cidr" {
-  type    = list(any)
-  default = [""]
-
+variable "region" {
+  type = string
 }
-
 variable "vpc_azs" {
-  type    = list(any)
-  default = [""]
-
+  type = list(string)
 }
+variable "private_subnet_cidr" {
+  type = list(string)
+}
+variable "public_subnet_cidr" {
+  type = list(string)
+}
+variable "enable_nat_gateway" {
+  type = bool
+}
+variable "one_nat_gateway_per_az" {
+  type = bool
+}
+
+variable "private_subnet_tags" {
+  description = "Additional tags to apply to private subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "public_subnet_tags" {
+  description = "Additional tags to apply to public subnets"
+  type        = map(string)
+  default     = {}
+}
+
 
 variable "subnets_id" {
   type    = string

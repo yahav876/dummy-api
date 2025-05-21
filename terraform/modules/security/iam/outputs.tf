@@ -6,6 +6,6 @@ output "ecr_role_arn" {
   }
 
 
-output "ecr_policy_document" {
-  value = data.aws_iam_policy_document.ecr_read_write.json
-}
+# output "ecr_policy_document" {
+#   value = data.aws_iam_policy_document.ecr_read_write.json
+# }

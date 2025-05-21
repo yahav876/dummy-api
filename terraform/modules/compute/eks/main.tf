@@ -2,42 +2,40 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.36.0"
 
-  cluster_name    = var.eks.cluster_name
-  cluster_version = var.eks.cluster_version
+  cluster_name    = var.cluster_name
+  cluster_version = var.cluster_version
 
-  cluster_endpoint_public_access           = var.eks.cluster_endpoint_public_access
-  enable_cluster_creator_admin_permissions = var.eks.enable_cluster_creator_admin_permissions
+  cluster_endpoint_public_access           = var.cluster_endpoint_public_access
+  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
 
-  cluster_compute_config = var.eks.cluster_compute_config
+  vpc_id     = var.vpc_id
+  subnet_ids = var.subnet_ids
 
-  vpc_id     = var.eks.vpc_id
-  subnet_ids = var.eks.subnet_ids
+  cluster_compute_config = {
+    enabled    = true
+    node_pools = ["general-purpose"]
+  }
+
+  cluster_addons = {
+    coredns = {
+      addon_version     = var.eks_addon_versions.coredns
+      resolve_conflicts = "OVERWRITE"
+    }
+
+    kube-proxy = {
+      addon_version     = var.eks_addon_versions.kube_proxy
+      resolve_conflicts = "OVERWRITE"
+    }
+
+    vpc-cni = {
+      addon_version     = var.eks_addon_versions.vpc_cni
+      resolve_conflicts = "OVERWRITE"
+    }
+
+    aws-ebs-csi-driver = {
+      addon_version     = var.eks_addon_versions.aws_ebs_csi_driver
+      resolve_conflicts = "OVERWRITE"
+    }
+  }
 
 }
-
-# module "eks" {
-#   source  = "terraform-aws-modules/eks/aws"
-#   version = "20.36.0"
-
-#   cluster_name    = "example"
-#   cluster_version = "1.31"
-
-#   # Optional
-#   cluster_endpoint_public_access = true
-
-#   # Optional: Adds the current caller identity as an administrator via cluster access entry
-#   enable_cluster_creator_admin_permissions = true
-
-#   cluster_compute_config = {
-#     enabled    = true
-#     node_pools = ["general-purpose"]
-#   }
-
-#   vpc_id     = "vpc-1234556abcdef"
-#   subnet_ids = ["subnet-abcde012", "subnet-bcde012a", "subnet-fghi345a"]
-
-#   tags = {
-#     Environment = "dev"
-#     Terraform   = "true"
-#   }
-# }

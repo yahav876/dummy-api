@@ -6,25 +6,31 @@ variable "general_config" {
   default = {}
 }
 
-variable "iam" {
-  description = "IAM role configuration"
-  type = object({
-    namespace          = string
-    stage              = string
-    name               = string
-    principals         = map(list(string))
-    policy_description = optional(string)
-    role_description   = optional(string)
-    policy_documents   = list(string)
-    tags               = optional(map(string), {})
-  })
+variable "namespace" {
+  type = string
+}
+variable "stage" {
+  type = string
+}
+variable "name" {
+  type = string
+}
+variable "principals" {
+  type = map(list(string))
+}
+variable "policy_documents" {
+  type = list(string)
+}
+variable "policy_description" {
+  type    = string
+  default = null
+}
+variable "role_description" {
+  type    = string
+  default = null
+}
+variable "tags" {
+  type    = map(string)
+  default = {}
 }
 
-
-variable "policy_config" {
-  description = "Configuration for policy module"
-  type = object({
-    region           = optional(string)
-    repository_name  = optional(string)
-  })
-}

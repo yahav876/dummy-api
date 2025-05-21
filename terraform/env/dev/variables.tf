@@ -2,6 +2,7 @@ variable "general_config" {
   description = "General configuration"
   type = object({
     region       = string
+    default_tags = map(string)
   })
 }
 
@@ -47,11 +48,23 @@ variable "eks" {
 }
 
 
+variable "eks_addon_versions" {
+  description = "Map of fixed versions for EKS core add-ons"
+  type = object({
+    coredns              = string
+    kube_proxy           = string
+    vpc_cni              = string
+    aws_ebs_csi_driver   = string
+  })
+}
+
+
+
 variable "ecr" {
   description = "ECR config to pass to ECR module"
   type = object({
     repository_name                   = string
-    repository_read_write_access_arns = list(string)
+    # repository_read_write_access_arns = list(string)
     repository_lifecycle_policy       = any
 
   })
@@ -112,12 +125,10 @@ variable "iam" {
   })
 }
 
-
-
 variable "ecr_policy_config" {
-  description = "Configuration for policy module"
+  description = "ECR policy config passed to the policy module"
   type = object({
-    region           = string
-    repository_name  = string
+    region          = string
+    repository_name = string
   })
 }

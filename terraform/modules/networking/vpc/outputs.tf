@@ -5,6 +5,10 @@ output "vpc_id" {
     ]
   }
 
+output "azs_passed_to_module" {
+  value = module.vpc.azs
+}
+
 output "subnets_id_public" {
      value = module.vpc.public_subnets
      depends_on = [

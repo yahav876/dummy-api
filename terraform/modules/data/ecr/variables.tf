@@ -1,8 +1,11 @@
-variable "ecr" {
-  description = "ECR configuration object"
-  type = object({
-    repository_name                   = string
-    repository_read_write_access_arns = list(string)
-    repository_lifecycle_policy       = any
-  })
+variable "repository_name" {
+  type = string
+}
+
+# variable "repository_read_write_access_arns" {
+#   type = list(string)
+# }
+
+variable "repository_lifecycle_policy" {
+  type = any
 }
