@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mockingbird.fullname" . }}
+  labels:
+    app: {{ include "mockingbird.name" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+  selector:
+    app: {{ include "mockingbird.name" . }}
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: {{ include "mockingbird.fullname" . }}
+#   labels:
+#     {{- include "mockingbird.labels" . | nindent 4 }}
+# spec:
+#   type: {{ .Values.service.type }}
+#   ports:
+#     - port: {{ .Values.service.port }}
+#       targetPort: http
+#       protocol: TCP
+#       name: http
+#   selector:
+#     {{- include "mockingbird.selectorLabels" . | nindent 4 }}
