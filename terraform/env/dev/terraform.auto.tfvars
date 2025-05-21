@@ -134,10 +134,16 @@ sg = {
       from_port   = 5432
       to_port     = 5432
       protocol    = "tcp"
-      description = "User-service ports"
+      description = "psql-rds"
       cidr_blocks = ""
     },
-
+    {
+      from_port   = 30080
+      to_port     = 30080
+      protocol    = "tcp"
+      description = "psql-nodeport"
+      cidr_blocks = "172.30.0.0/16"
+    },
   ]
 
 }
