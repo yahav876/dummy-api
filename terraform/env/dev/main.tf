@@ -39,32 +39,10 @@ module "eks" {
 }
 
 
-# module "ebs_csi_irsa_role" {
-#   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-#   version = "5.37.0"
-
-#   role_name = "AmazonEKS_EBS_CSI_DriverRole-TF"
-#   attach_ebs_csi_policy = true
-
-#   oidc_providers = {
-#     main = {
-#       provider_arn               = module.eks.oidc_provider_arn
-#       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
-#     }
-#   }
-
-#   tags = {
-#     "Name" = "ebs-csi-driver-irsa"
-#   }
-# }
-
-
-
 module "ecr" {
   source = "../../modules/data/ecr"
 
   repository_name                    = var.ecr.repository_name
-  # repository_read_write_access_arns = [module.ecr_rw_role.ecr_role_arn]
   repository_lifecycle_policy       = var.ecr.repository_lifecycle_policy
 }
 
@@ -135,4 +113,27 @@ module "ecr_rw_role" {
   tags               = var.iam.tags
 }
 
+
+module "airflow_nlb" {
+  source = "../../modules/networking/loadbalancing"
+
+  name                             = var.airflow_nlb.name
+  vpc_id                           = module.vpc.vpc_id
+  subnets                          = module.vpc.subnets_id_public
+  internal                         = var.airflow_nlb.internal
+  port                             = var.airflow_nlb.port
+  target_group_port                = var.airflow_nlb.target_group_port
+  target_group_protocol            = var.airflow_nlb.target_group_protocol
+  listener_protocol                = var.airflow_nlb.listener_protocol
+  target_type                      = var.airflow_nlb.target_type
+  target_ids                       = var.airflow_nlb.target_ids
+  enable_cross_zone_load_balancing = var.airflow_nlb.enable_cross_zone_load_balancing
+  idle_timeout                     = var.airflow_nlb.idle_timeout
+  tags                             = var.airflow_nlb.tags
+}
+
+resource "aws_autoscaling_attachment" "nlb_attach" {
+  autoscaling_group_name = module.eks.eks_managed_node_groups["general-purpose"].autoscaling_group_name
+  alb_target_group_arn   = module.airflow_nlb.target_group_arn
+}
 

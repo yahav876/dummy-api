@@ -53,7 +53,6 @@ eks_addon_versions = {
   coredns            = "v1.11.3-eksbuild.1"
   kube_proxy         = "v1.31.2-eksbuild.3"
   vpc_cni            = "v1.19.0-eksbuild.1"
-  # aws_ebs_csi_driver = "v1.43.0-eksbuild.1"
 }
 
 
@@ -156,7 +155,6 @@ iam = {
 
   principals = {
     Service = ["ec2.amazonaws.com"]
-    # AWS = ["arn:aws:iam::123456789012:user/ci"]
   }
 
   policy_description = "Allows read/write access to specific ECR repo"
@@ -175,3 +173,43 @@ ecr_policy_config = {
   region          = "us-east-1"
   repository_name = "my-ecr-repo"
 }
+
+
+airflow_nlb = {
+  name                  = "external-nlb"
+  vpc_id                = ""
+  subnets               = [""]
+  internal              = false
+  port                  = 80
+  target_group_port     = 30080
+  target_group_protocol = "TCP"
+  listener_protocol     = "TCP"
+  target_type           = "instance"
+  target_ids            = [] # You can dynamically register targets later
+  enable_cross_zone_load_balancing = true
+  idle_timeout          = 60
+  tags = {
+    Environment = "dev"
+    Project     = "nlb-test"
+  }
+}
+# airflow_nlb = {
+#   name       = "airflow-nlb"
+#   vpc_id     = "vpc-abcde012"
+#   subnets    = ["subnet-abcde012", "subnet-bcde012a"]
+
+#   internal                         = false
+#   port                             = 80
+#   target_group_port                = 30080
+#   target_group_protocol            = "TCP"
+#   listener_protocol                = "TCP"
+#   target_type                      = "instance"
+#   target_ids                       = []  # You can later use a data source or output from EKS
+#   enable_cross_zone_load_balancing = true
+#   idle_timeout                     = 60
+
+#   tags = {
+#     Environment = "dev"
+#     Project     = "airflow"
+#   }
+# }

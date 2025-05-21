@@ -132,3 +132,23 @@ variable "ecr_policy_config" {
     repository_name = string
   })
 }
+
+
+variable "airflow_nlb" {
+  description = "NLB configuration"
+  type = object({
+    name                        = string
+    vpc_id                      = string
+    subnets                     = list(string)
+    internal                    = optional(bool, false)
+    port                        = number
+    target_group_port           = number
+    target_group_protocol       = string
+    listener_protocol           = string
+    target_type                 = string
+    target_ids                  = list(string)
+    enable_cross_zone_load_balancing = optional(bool, true)
+    idle_timeout                = optional(number, 60)
+    tags                        = map(string)
+  })
+}
