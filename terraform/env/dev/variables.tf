@@ -36,11 +36,6 @@ variable "eks" {
     cluster_endpoint_public_access                = bool
     enable_cluster_creator_admin_permissions      = bool
 
-    cluster_compute_config = object({
-      enabled    = bool
-      node_pools = list(string)
-    })
-
     vpc_id     = string
     subnet_ids = list(string)
 
@@ -54,7 +49,7 @@ variable "eks_addon_versions" {
     coredns              = string
     kube_proxy           = string
     vpc_cni              = string
-    # aws_ebs_csi_driver   = string
+    aws_ebs_csi_driver   = string
   })
 }
 
@@ -133,22 +128,25 @@ variable "ecr_policy_config" {
   })
 }
 
-
-variable "airflow_nlb" {
-  description = "NLB configuration"
+variable "nlb" {
+  description = "Configuration object for NLB"
   type = object({
-    name                        = string
-    vpc_id                      = string
-    subnets                     = list(string)
-    internal                    = optional(bool, false)
-    port                        = number
-    target_group_port           = number
-    target_group_protocol       = string
-    listener_protocol           = string
-    target_type                 = string
-    target_ids                  = list(string)
-    enable_cross_zone_load_balancing = optional(bool, true)
-    idle_timeout                = optional(number, 60)
-    tags                        = map(string)
+    internal                                = bool
+    tcp_enabled                             = bool
+    access_logs_enabled                     = bool
+    nlb_access_logs_s3_bucket_force_destroy = bool
+    nlb_access_logs_s3_bucket_force_destroy_enabled = bool
+    cross_zone_load_balancing_enabled       = bool
+    idle_timeout                            = number
+    ip_address_type                         = string
+    deletion_protection_enabled             = bool
+    deregistration_delay                    = number
+    health_check_path                       = string
+    health_check_timeout                    = number
+    health_check_threshold                  = number
+    health_check_unhealthy_threshold        = number
+    health_check_interval                   = number
+    target_group_port                       = number
+    target_group_target_type                = string
   })
 }

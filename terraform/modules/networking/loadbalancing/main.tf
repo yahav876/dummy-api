@@ -1,40 +1,22 @@
 module "nlb" {
-  source = "terraform-aws-modules/alb/aws"
-  version = "9.16.0"
+    source = "cloudposse/nlb/aws"
+    version = "0.18.1"
 
-  name    = var.nlb.name
-  vpc_id  = var.nlb.vpc_id
-  subnets = var.nlb.subnets
+    vpc_id                                          = var.vpc_id
+    subnet_ids                                      = var.subnet_ids
+    internal                                        = var.internal
+    tcp_enabled                                     = var.tcp_enabled
+    access_logs_enabled                             = var.access_logs_enabled
+    nlb_access_logs_s3_bucket_force_destroy         = var.nlb_access_logs_s3_bucket_force_destroy
+    cross_zone_load_balancing_enabled               = var.cross_zone_load_balancing_enabled
+    ip_address_type                                 = var.ip_address_type
+    deletion_protection_enabled                     = var.deletion_protection_enabled
+    deregistration_delay                            = var.deregistration_delay
+    health_check_path                               = var.health_check_path
+    health_check_timeout                            = var.health_check_timeout
+    health_check_unhealthy_threshold                = var.health_check_unhealthy_threshold
+    health_check_interval                           = var.health_check_interval
+    target_group_port                               = var.target_group_port
+    target_group_target_type                        = var.target_group_target_type
 
-  load_balancer_type = "network"
-  internal            = var.nlb.internal
-  enable_cross_zone_load_balancing = var.nlb.enable_cross_zone_load_balancing
-  idle_timeout        = var.nlb.idle_timeout
-
-  listeners = {
-    http = {
-      port     = var.nlb.port
-      protocol = var.nlb.listener_protocol
-      forward = {
-        target_group_key = "main"
-      }
-    }
   }
-
-  target_groups = {
-    main = {
-      name_prefix = "tg"
-      backend_protocol = var.nlb.target_group_protocol
-      backend_port     = var.nlb.target_group_port
-      target_type      = var.nlb.target_type
-      targets = [
-        for id in var.nlb.target_ids : {
-          target_id = id
-          port      = var.nlb.target_group_port
-        }
-      ]
-    }
-  }
-
-  tags = var.nlb.tags
-}

@@ -39,11 +39,6 @@ eks = {
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
 
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose"]
-  }
-
   vpc_id     = ""
   subnet_ids = []
 
@@ -53,6 +48,7 @@ eks_addon_versions = {
   coredns            = "v1.11.3-eksbuild.1"
   kube_proxy         = "v1.31.2-eksbuild.3"
   vpc_cni            = "v1.19.0-eksbuild.1"
+  aws_ebs_csi_driver = "v1.43.0-eksbuild.1"
 }
 
 
@@ -175,41 +171,22 @@ ecr_policy_config = {
 }
 
 
-airflow_nlb = {
-  name                  = "external-nlb"
-  vpc_id                = ""
-  subnets               = [""]
-  internal              = false
-  port                  = 80
-  target_group_port     = 30080
-  target_group_protocol = "TCP"
-  listener_protocol     = "TCP"
-  target_type           = "instance"
-  target_ids            = [] # You can dynamically register targets later
-  enable_cross_zone_load_balancing = true
-  idle_timeout          = 60
-  tags = {
-    Environment = "dev"
-    Project     = "nlb-test"
-  }
+nlb = {
+  internal                                = false
+  tcp_enabled                             = true
+  access_logs_enabled                     = false
+  nlb_access_logs_s3_bucket_force_destroy = false
+  nlb_access_logs_s3_bucket_force_destroy_enabled = false
+  cross_zone_load_balancing_enabled       = true
+  idle_timeout                            = 60
+  ip_address_type                         = "ipv4"
+  deletion_protection_enabled             = false
+  deregistration_delay                    = 300
+  health_check_path                       = "/"
+  health_check_timeout                    = 5
+  health_check_threshold                  = 3
+  health_check_unhealthy_threshold        = 3
+  health_check_interval                   = 30
+  target_group_port                       = 30080
+  target_group_target_type                = "instance"
 }
-# airflow_nlb = {
-#   name       = "airflow-nlb"
-#   vpc_id     = "vpc-abcde012"
-#   subnets    = ["subnet-abcde012", "subnet-bcde012a"]
-
-#   internal                         = false
-#   port                             = 80
-#   target_group_port                = 30080
-#   target_group_protocol            = "TCP"
-#   listener_protocol                = "TCP"
-#   target_type                      = "instance"
-#   target_ids                       = []  # You can later use a data source or output from EKS
-#   enable_cross_zone_load_balancing = true
-#   idle_timeout                     = 60
-
-#   tags = {
-#     Environment = "dev"
-#     Project     = "airflow"
-#   }
-# }

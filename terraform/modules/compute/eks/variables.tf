@@ -10,12 +10,6 @@ variable "cluster_endpoint_public_access" {
 variable "enable_cluster_creator_admin_permissions" {
   type = bool
 }
-variable "cluster_compute_config" {
-  type = object({
-    enabled    = bool
-    node_pools = list(string)
-  })
-}
 
 # variable "ebs_csi_driver_irsa_arn" {
 #   description = "IAM role ARN for the aws-ebs-csi-driver addon"
@@ -28,7 +22,7 @@ variable "eks_addon_versions" {
     coredns              = string
     kube_proxy           = string
     vpc_cni              = string
-    # aws_ebs_csi_driver   = string
+    aws_ebs_csi_driver   = string
   })
 }
 

@@ -30,8 +30,6 @@ module "eks" {
   cluster_endpoint_public_access        = var.eks.cluster_endpoint_public_access
   enable_cluster_creator_admin_permissions = var.eks.enable_cluster_creator_admin_permissions
 
-  cluster_compute_config = var.eks.cluster_compute_config
-
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.subnets_id_private
 
@@ -113,27 +111,40 @@ module "ecr_rw_role" {
   tags               = var.iam.tags
 }
 
-
 module "airflow_nlb" {
   source = "../../modules/networking/loadbalancing"
 
-  name                             = var.airflow_nlb.name
-  vpc_id                           = module.vpc.vpc_id
-  subnets                          = module.vpc.subnets_id_public
-  internal                         = var.airflow_nlb.internal
-  port                             = var.airflow_nlb.port
-  target_group_port                = var.airflow_nlb.target_group_port
-  target_group_protocol            = var.airflow_nlb.target_group_protocol
-  listener_protocol                = var.airflow_nlb.listener_protocol
-  target_type                      = var.airflow_nlb.target_type
-  target_ids                       = var.airflow_nlb.target_ids
-  enable_cross_zone_load_balancing = var.airflow_nlb.enable_cross_zone_load_balancing
-  idle_timeout                     = var.airflow_nlb.idle_timeout
-  tags                             = var.airflow_nlb.tags
+  vpc_id                                         = module.vpc.vpc_id
+  subnet_ids                                     = module.vpc.subnets_id_public
+
+  internal                                       = var.nlb.internal
+  tcp_enabled                                    = var.nlb.tcp_enabled
+  access_logs_enabled                            = var.nlb.access_logs_enabled
+  nlb_access_logs_s3_bucket_force_destroy        = var.nlb.nlb_access_logs_s3_bucket_force_destroy
+  nlb_access_logs_s3_bucket_force_destroy_enabled = var.nlb.nlb_access_logs_s3_bucket_force_destroy_enabled
+  cross_zone_load_balancing_enabled              = var.nlb.cross_zone_load_balancing_enabled
+  idle_timeout                                   = var.nlb.idle_timeout
+  ip_address_type                                = var.nlb.ip_address_type
+  deletion_protection_enabled                    = var.nlb.deletion_protection_enabled
+  deregistration_delay                           = var.nlb.deregistration_delay
+  health_check_path                              = var.nlb.health_check_path
+  health_check_timeout                           = var.nlb.health_check_timeout
+  health_check_unhealthy_threshold               = var.nlb.health_check_unhealthy_threshold
+  health_check_interval                          = var.nlb.health_check_interval
+  target_group_port                              = var.nlb.target_group_port
+  target_group_target_type                       = var.nlb.target_group_target_type
+
 }
 
-resource "aws_autoscaling_attachment" "nlb_attach" {
-  autoscaling_group_name = module.eks.eks_managed_node_groups["general-purpose"].autoscaling_group_name
-  alb_target_group_arn   = module.airflow_nlb.target_group_arn
+locals {
+  eks_asg_map = {
+    example = module.eks.eks_managed_node_groups_autoscaling_group_names[0]
+  }
 }
 
+resource "aws_autoscaling_attachment" "nlb_asg_attachments" {
+  for_each = local.eks_asg_map
+
+  autoscaling_group_name = each.value
+  lb_target_group_arn    = module.airflow_nlb.target_group_arn
+}
