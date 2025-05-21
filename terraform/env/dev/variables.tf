@@ -54,7 +54,7 @@ variable "eks_addon_versions" {
     coredns              = string
     kube_proxy           = string
     vpc_cni              = string
-    aws_ebs_csi_driver   = string
+    # aws_ebs_csi_driver   = string
   })
 }
 

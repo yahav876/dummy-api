@@ -17,13 +17,18 @@ variable "cluster_compute_config" {
   })
 }
 
+# variable "ebs_csi_driver_irsa_arn" {
+#   description = "IAM role ARN for the aws-ebs-csi-driver addon"
+#   type        = string
+# }
+
 variable "eks_addon_versions" {
   description = "Map of fixed versions for EKS core add-ons"
   type = object({
     coredns              = string
     kube_proxy           = string
     vpc_cni              = string
-    aws_ebs_csi_driver   = string
+    # aws_ebs_csi_driver   = string
   })
 }
 

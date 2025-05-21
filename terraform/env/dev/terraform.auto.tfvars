@@ -53,7 +53,7 @@ eks_addon_versions = {
   coredns            = "v1.11.3-eksbuild.1"
   kube_proxy         = "v1.31.2-eksbuild.3"
   vpc_cni            = "v1.19.0-eksbuild.1"
-  aws_ebs_csi_driver = "v1.43.0-eksbuild.1"
+  # aws_ebs_csi_driver = "v1.43.0-eksbuild.1"
 }
 
 

@@ -1,7 +1,0 @@
-global:
-  domainName: [MOCKINGBIRD-DOMAIN]
-apimock-ingress-nginx:
-  controller:
-    service:
-      loadBalancerIP: [MOCKINGBIRD-STATIC-IP]
-

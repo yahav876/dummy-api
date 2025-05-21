@@ -32,10 +32,11 @@ module "eks" {
       resolve_conflicts = "OVERWRITE"
     }
 
-    aws-ebs-csi-driver = {
-      addon_version     = var.eks_addon_versions.aws_ebs_csi_driver
-      resolve_conflicts = "OVERWRITE"
-    }
+    # aws-ebs-csi-driver = {
+    #   addon_version     = var.eks_addon_versions.aws_ebs_csi_driver
+    #   resolve_conflicts = "OVERWRITE"
+    #   service_account_role_arn = var.ebs_csi_driver_irsa_arn
+    # }
   }
 
 }
