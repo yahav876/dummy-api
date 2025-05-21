@@ -19,4 +19,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 1512
+            - containerPort: 1511
+          volumeMounts:
+            - name: stub-settings
+              mountPath: /root/.stub-on-prem
+      volumes:
+        - name: stub-settings
+          emptyDir: {}

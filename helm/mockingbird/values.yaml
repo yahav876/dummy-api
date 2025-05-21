@@ -38,8 +38,8 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 1512
+  port: 1511
+  targetPort: 1511
 
 ingress:
   enabled: false

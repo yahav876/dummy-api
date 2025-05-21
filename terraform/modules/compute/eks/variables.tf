@@ -11,11 +11,6 @@ variable "enable_cluster_creator_admin_permissions" {
   type = bool
 }
 
-# variable "ebs_csi_driver_irsa_arn" {
-#   description = "IAM role ARN for the aws-ebs-csi-driver addon"
-#   type        = string
-# }
-
 variable "eks_addon_versions" {
   description = "Map of fixed versions for EKS core add-ons"
   type = object({

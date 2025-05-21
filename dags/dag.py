@@ -7,7 +7,7 @@ from datetime import datetime
 
 def ingest_data():
     # Call dummy data API
-    resp = requests.get("http://mockingbird.airflow.svc.cluster.local:1512/api/random")
+    resp = requests.get("http://mockingbird.airflow.svc.cluster.local:1511/api/random")
     resp.raise_for_status()
     data = resp.json()
 
