@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mockoon.fullname" . }}
+  labels:
+    app: {{ include "mockoon.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "mockoon.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "mockoon.name" . }}
+    spec:
+      containers:
+        - name: mockoon
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --data
+            - {{ .Values.remoteDataURL | quote }}
+            - --port
+            - "{{ .Values.containerPort }}"
+            - --repair
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 100m
+            requests:
+              memory: 64Mi
+              cpu: 50m

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "mockoon.fullname" . }}-test-connection"
+  labels:
+    {{- include "mockoon.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "mockoon.fullname" . }}:{{ .Values.service.port | default 3000 }}']
+
+  restartPolicy: Never
