@@ -411,8 +411,8 @@ data:
   #--from-literal=connection='postgresql+psycopg2://postgres:JvBjpfPeBAd.d]6ENi>rE3N36LK?@demodb.co5lfeik9e1a.us-east-1.rds.amazonaws.com:5432/demodb'
 
   metadataConnection: 
-    user: postgres
-    pass: JvBjpfPeBAd.d]6ENi>rE3N36LK?
+    user: postgres 
+    pass: 6(|EqH<G9B7n(lpMI>pkK)xZkivU
     protocol: postgresql
     host: demodb.co5lfeik9e1a.us-east-1.rds.amazonaws.com
     port: 5432
