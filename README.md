@@ -12,9 +12,15 @@ Before you begin, ensure the following tools are installed on your local machine
 
 
 
+
+
 # -------------------------------------------
 # 🚀 Quick Start
 # -------------------------------------------
+
+# =============================================================================
+# ⚠️ IMPORTANT: Update the variables and configuration (values.yaml) before running!
+# =============================================================================
 
 # Make scripts executable
 chmod +x *.sh
