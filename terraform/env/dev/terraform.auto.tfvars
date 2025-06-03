@@ -18,8 +18,8 @@ vpc = {
   private_subnet_cidr = ["172.30.0.0/24", "172.30.16.0/24", "172.30.32.0/24"]
   public_subnet_cidr  = ["172.30.48.0/24", "172.30.64.0/24", "172.30.80.0/24"]
 
-  enable_nat_gateway     = true
-  one_nat_gateway_per_az = true
+  enable_nat_gateway     = false
+  one_nat_gateway_per_az = false
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
@@ -33,7 +33,7 @@ vpc = {
 
 
 eks = {
-  cluster_name    = "example-eks"
+  cluster_name    = "example-eks-dev"
   cluster_version = "1.31"
 
   cluster_endpoint_public_access           = true
@@ -77,7 +77,7 @@ ecr = {
 
 
 db = {
-  identifier      = "demodb"
+  identifier      = "demodb-dev"
   engine_version  = "17.5"
   instance_class  = "db.t3.medium"
   allocated_storage = 20
@@ -97,7 +97,7 @@ db = {
 
   monitoring_interval    = 30
   monitoring_role_name   = "MyRDSMonitoringRole"
-  create_monitoring_role = true
+  create_monitoring_role = false
 
   family               = "postgres17"
   major_engine_version = "17"
